@@ -1,0 +1,29 @@
+hey I build the web for video meating app like zoom
+
+features that normal :
+
+video stareming
+share screen
+send live messages
+top pin the video
+big screen for speaker video 
+mic on off video on off
+ 
+you can join wia id password 
+you can create a live 
+
+
+
+
+advance features
+translate when user say something translate in any language
+translate voice when user say as per user
+
+ai text translate when user message in live 
+meeting summery and export as a report with some images of meetings
+if you want to record the live you can record 
+integrate the payment strip
+
+send emojis in live 
+
+permition for join

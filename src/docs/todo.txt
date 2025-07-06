@@ -1,0 +1,5 @@
+build a basic structure of project
+thing all product names and thing about project 
+add google auth 
+define all schemas
+get all images in cloudinary

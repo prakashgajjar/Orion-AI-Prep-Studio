@@ -1,29 +1,25 @@
-hey I build the web for video meating app like zoom
+one to one ai conversation
+multi to one ai conversation 
 
-features that normal :
+mock interview like frontend engineering (level 1 - 5) , backend  , AI/ML more..
+ai test generetion ...
 
-video stareming
-share screen
-send live messages
-top pin the video
-big screen for speaker video 
-mic on off video on off
- 
-you can join wia id password 
-you can create a live 
+ai prepration suggetion 
+ai as guide 
+ai as exam prepration 
+ai in technical round (like we write some code of problem they tell me expain why you write that part another optimize way)
+ai HR round 
 
+ai give pdf and they ask quetions from this 
 
+Challenge Mode (Timed, rapid-fire round:)
+Sentiment Analysis on Voice
 
-
-advance features
-translate when user say something translate in any language
-translate voice when user say as per user
-
-ai text translate when user message in live 
-meeting summery and export as a report with some images of meetings
-if you want to record the live you can record 
-integrate the payment strip
-
-send emojis in live 
-
-permition for join
+Version History
+Company-Specific Packs(FAANG roles , startup base)
+AI Code Reviewer
+One-Click Report Generator
+Smart Schedule & Streak Coach
+ Exam Paper Generator
+ AI Concept Explainer   
+ Multi-Language Support

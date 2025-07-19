@@ -3,6 +3,8 @@ import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import { MockInterviewSection } from "@/components/MockInterviewSection";
 import Footer from "@/components/Footer";
+import Subscription from "./subsciption/Subscription";
+import ReviewSlider from "@/components/Review";
 
 const App = () => {
   return (
@@ -67,7 +69,21 @@ const App = () => {
           </div>
         </section>
 
-{/* footer secotion  */}
+        <section>
+          <div>
+            <ReviewSlider />
+          </div>
+        </section>
+
+        <section>
+          <div className="mt-9">
+            <div>
+              <Subscription />
+            </div>
+          </div>
+        </section>
+
+        {/* footer secotion  */}
         <section>
           <div className="mt-9">
             <Footer />

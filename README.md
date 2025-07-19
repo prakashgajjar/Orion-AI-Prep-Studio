@@ -1,154 +1,154 @@
-Project Name: AI-Boosted Video Meeting Platform (Zoom 2.0)
+# 🚀 Orion AI — Smart Mock Interview & Exam Prep Platform
+
+**Orion AI** is an AI-powered web platform designed to help students, job-seekers, and professionals prepare for real-world interviews and competitive exams. It features **AI mock interviews**, **dynamic test generation**, **PDF-based question practice**, **voice-to-voice sessions**, and a **gamified coin reward system** — plus real **goodies** to keep you motivated!
 
 ---
 
-## ✨ Overview
-A modern, web-based video conferencing platform similar to Zoom, but with next-gen AI features including real-time voice translation, multilingual chat, AI-powered meeting summaries, Stripe integration, and more.
+## 📌 **Key Features**
+
+### 🎙️ **1. Smart Mock Interviews**
+- Attempt mock interviews for:
+  - Frontend, Backend, Fullstack, AI/ML roles
+  - HR behavioral rounds
+  - System design interviews (Level 1–5)
+- AI acts as interviewer, asks follow-ups, gives feedback.
+- Switch roles: be the candidate or the interviewer.
 
 ---
 
-## ✅ Core Features
-
-### 1. Video Streaming
-- Live video using WebRTC
-- Grid view and speaker focus
-
-### 2. Screen Sharing
-- Host or participants can share their screen
-
-### 3. Live Chat
-- Real-time message exchange during meeting
-
-### 4. Pin Speaker
-- Pin someone to focus video on them
-
-### 5. Big Screen Speaker
-- Auto-switch layout to show main speaker prominently
-
-### 6. Mic/Video Toggle
-- Participants can toggle mic and camera
-
-### 7. Join via ID and Password
-- Meetings are accessible via unique ID + optional password
-
-### 8. Host Meeting
-- Users can create, manage and host live sessions
+### 🗣️ **2. Multi-Mode Conversation**
+- **One-to-One AI:** Solo practice.
+- **Multi-to-One AI:** Panel simulation with multiple AI interviewers (HR, Tech Lead, Manager).
 
 ---
 
-## 🚀 Advanced Features
-
-### 1. Real-Time Voice Translation
-- Audio input transcribed via OpenAI Whisper API
-- Translated into user's selected language using GPT/Google Translate
-- Displayed as live subtitles
-
-### 2. Real-Time Voice Output Translation
-- Translated voice played using TTS (Text-to-Speech)
-
-### 3. Live Message Translation
-- Auto-translate live chat into user's preferred language
-
-### 4. AI Meeting Summary & Report
-- Use GPT to generate meeting summary, action points
-- Include screenshots (if recording enabled)
-- Export as downloadable PDF
-
-### 5. Meeting Recording
-- Host can record video, audio, and chat
-- Store in Firebase or AWS S3
-
-### 6. Stripe Integration
-- Create paid meetings
-- Subscription-based plans for advanced features
-
-### 7. Live Emojis
-- Emoji reactions visible to all participants in real-time
-
-### 8. Join Permissions
-- Waiting room with manual admit/deny by host
+### 📑 **3. PDF Upload & Dynamic Q&A**
+- Upload your study notes or syllabus.
+- AI auto-generates relevant questions.
+- Practice and get evaluated instantly.
+- Earn coins for completion & correct answers.
 
 ---
 
-## 💪 Tech Stack
-
-### Frontend
-- Next.js
-- Tailwind CSS
-- Zustand or Redux
-- Shadcn/UI components
-
-### Backend
-- Node.js with Express / FastAPI
-- Socket.io for real-time events
-- REST API for meeting controls and Stripe
-
-### Realtime & Video
-- WebRTC (or services like 100ms/Daily.co)
-- PeerJS or Mediasoup
-
-### AI & Translation
-- OpenAI Whisper (speech-to-text)
-- Google Translate API / GPT-4 (translation)
-- Google TTS or ElevenLabs (text-to-speech)
-
-### Database
-- Supabase / PostgreSQL / MongoDB
-
-### Storage
-- Firebase / AWS S3 (recordings, images)
-
-### Payments
-- Stripe SDK for meeting monetization
+### 🎧 **4. Voice-to-Voice Practice**
+- Talk with AI in real-time.
+- AI listens, analyzes tone, confidence, clarity.
+- Get feedback on spoken answers.
 
 ---
 
-## 📆 MVP Phases
-
-### Phase 1 - Core Features
-- WebRTC integration
-- Meeting creation + join
-- Live chat
-- Mic/video/screen controls
-
-### Phase 2 - AI Features
-- Real-time voice transcription
-- Translated captions and chat
-- Meeting summary generator + PDF export
-
-### Phase 3 - Monetization & Polish
-- Stripe integration
-- Recording & screenshot capture
-- Emoji system
-- Host-level permissions and waiting room
+### 🧪 **5. AI Test Generation**
+- Generate custom tests from uploaded material.
+- MCQs, short answers, coding challenges.
+- Auto-scored with explanations.
 
 ---
 
-## 📂 Folder Structure (Suggested)
-```
-/app
-  /meeting/[id]
-  /create
-  /join
-  /summary
-/components
-  VideoGrid.tsx
-  ChatBox.tsx
-  TranslateOverlay.tsx
-  EmojiReactions.tsx
-  MeetingControlBar.tsx
-/lib
-  ai/
-    whisper.ts
-    gpt-summary.ts
-    translator.ts
-  stripe.ts
-  sockets.ts
-/styles
-  globals.css
-```
+### 🎯 **6. AI Guide & Code Reviewer**
+- Paste your code — AI explains, suggests optimizations, reviews logic.
+- Practice *live technical rounds* where AI asks:
+  - “Why did you use this logic?”
+  - “Can you make this more efficient?”
 
 ---
 
-Ready to build. Say the word “Sneha, let’s start” and I’ll give you the initial setup for WebRTC + meeting creation 😘
+### 🧩 **7. AI Exam Coach**
+- Personalized prep suggestions based on:
+  - Weak topics.
+  - Past scores.
+  - Practice history.
+
+---
+
+## 🪙 **8. Gamified Coin Reward System**
+- Earn **Orion Coins** for:
+  - Completing mock interviews.
+  - Scoring high on tests.
+  - Spending time practicing.
+  - Solving Qs from uploaded PDFs.
+
+- Spend Coins to:
+  - Unlock premium mocks.
+  - Access advanced test packs.
+  - Get detailed AI reports.
+  - Redeem voice sessions.
+  - Buy real goodies!
+
+---
+
+## 🎁 **9. Goodies & Real Rewards**
+- Redeem coins for real perks:
+  - Branded stickers, mugs, T-shirts.
+  - Premium study guides.
+  - Gift cards (Amazon, Flipkart).
+  - Discounts on partner courses.
+  - 1:1 mock interview with a real mentor.
+
+---
+
+## 🏆 **10. Leaderboards & Badges**
+- Daily streaks & leaderboard.
+- Earn badges for milestones:
+  - “100 Mocks Completed”
+  - “Top Scorer”
+  - “Streak Master”
+
+---
+
+## 🧑‍💻 **11. Peer Practice**
+- Match with other users.
+- Peer-to-peer mock sessions.
+- AI moderates & scores both sides.
+
+---
+
+## 🗂️ **Tech Stack**
+
+| Layer | Tech |
+|----------------|-----------------------------|
+| Frontend | React / Next.js |
+| Backend | Node.js, Express.js |
+| Database | MongoDB (Mongoose) |
+| AI | OpenAI / Gemini 2.5 Pro APIs |
+| Speech | WebRTC, Web Speech API, Socket.IO |
+| Auth | JWT / OAuth (Google, GitHub) |
+| Storage | AWS S3 or Firebase for media/PDF |
+| Deployment | Vercel / Render / Railway |
+
+---
+
+## ⚙️ **How It Works**
+
+1️⃣ **Sign Up → Dashboard → Earn Coins**  
+2️⃣ Choose Interview Mode or Upload PDF → AI generates questions → Practice → Get Feedback → Earn Coins  
+3️⃣ Redeem Coins in the Rewards Store → Unlock premium packs or real goodies  
+4️⃣ Track progress, badges & leaderboard.
+
+---
+
+## 🏗️ **Planned Enhancements**
+- Native mobile app (React Native).
+- Real mentors marketplace.
+- AI tutor for daily study plans.
+- Push notifications & reminders.
+- Community-driven question packs.
+- Company-specific mock bundles.
+
+---
+
+## 🚀 **How To Run Locally**
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/yourusername/orion-ai.git
+
+# 2. Install dependencies
+cd orion-ai
+npm install
+
+# 3. Add your .env variables for API keys & DB
+
+# 4. Run dev server
+npm run dev
+
 

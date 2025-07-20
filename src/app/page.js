@@ -5,12 +5,12 @@ import { MockInterviewSection } from "@/components/MockInterviewSection";
 import Footer from "@/components/Footer";
 import Subscription from "./subsciption/Subscription";
 import ReviewSlider from "@/components/Review";
+import PaymentSuccess from "@/components/Success";
 
 const App = () => {
   return (
     <>
       <Navbar />
-
       {/* Hero Section */}
       <div className="bg-gradient-to-b from-blue-100 to-white">
         <section className="text-center py-20 px-6 bg-gradient-to-b from-blue-100 to-white">

@@ -1,5 +1,25 @@
 @import "tailwindcss";
 
+::-webkit-scrollbar {
+  width: 4px; /* You can't set exactly 1px, browsers round it, so use 2-4px for visible thinness */
+  height: 4px; /* For horizontal scrollbars */
+}
+
+::-webkit-scrollbar-thumb {
+  background: white; /* Purple shade */
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: white transparent;
+}
+
 @keyframes slide {
   0% {
     transform: translateX(0);
@@ -12,3 +32,4 @@
 .animate-slide {
   animation: slide 30s linear infinite;
 }
+

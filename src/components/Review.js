@@ -25,42 +25,46 @@ const testimonials = [
 
 export default function ReviewSlider() {
   return (
-    <div className="overflow-hidden py-12 bg-indigo-50">
-      <h2 className="text-3xl font-bold text-center mb-4">See It In Action</h2>
-      <p className="text-center text-gray-600 mb-8">
-        Watch how our AI-powered platform transforms the hiring process from start to finish.
-      </p>
+    <div className="overflow-hidden py-12 bg-black/80 backdrop-blur-lg">
+  <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-green-400 drop-shadow">
+    See It In Action
+  </h2>
+  <p className="text-center text-gray-400 mb-8 max-w-xl mx-auto">
+    Watch how our AI-powered platform transforms the hiring process from start to finish.
+  </p>
 
-      <div className="relative w-full">
-        <div className="flex w-max animate-slide space-x-8">
-          {Array(3  )
-            .fill(testimonials)
-            .flat()
-            .map((testimonial, idx) => (
-              <div
-                key={idx}
-                className="bg-white rounded-lg shadow p-6 flex-shrink-0 w-[300px] h-[300px] sm:w-[460px] ms:h-[320px]"
-              >
-                <p className="text-yellow-500 text-xl mb-2">★★★★★</p>
-                <p className="text-gray-700 italic line-clamp-4 overflow-ellipsis h-30 mb-4">“{testimonial.text}”</p>
-                <div className="flex items-center">
-                  <Image
-                    src={testimonial.img}
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-full object-cover  mr-4"
-                    width={48}
-                    height={48}
-
-                  />
-                  <div>
-                    <p className="font-bold">{testimonial.name}</p>
-                    <p className="text-sm text-gray-500">{testimonial.role}</p>
-                  </div>
-                </div>
+  <div className="relative w-full">
+    <div className="flex w-max animate-slide space-x-8">
+      {Array(3)
+        .fill(testimonials)
+        .flat()
+        .map((testimonial, idx) => (
+          <div
+            key={idx}
+            className="bg-white/5 border border-gray-700 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-green-500/20 hover:border-green-400 p-6 flex-shrink-0 w-[300px] h-[300px] sm:w-[460px] sm:h-[320px] transition-all duration-300"
+          >
+            <p className="text-yellow-400 text-xl mb-2">★★★★★</p>
+            <p className="text-gray-300 italic line-clamp-4 overflow-ellipsis mb-4">
+              “{testimonial.text}”
+            </p>
+            <div className="flex items-center">
+              <Image
+                src={testimonial.img}
+                alt={testimonial.name}
+                className="w-12 h-12 rounded-full object-cover mr-4"
+                width={48}
+                height={48}
+              />
+              <div>
+                <p className="font-bold text-green-300">{testimonial.name}</p>
+                <p className="text-sm text-gray-400">{testimonial.role}</p>
               </div>
-            ))}
-        </div>
-      </div>
+            </div>
+          </div>
+        ))}
     </div>
+  </div>
+</div>
+
   );
 }

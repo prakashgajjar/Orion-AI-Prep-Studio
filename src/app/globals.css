@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
 ::-webkit-scrollbar {
-  width: 4px; /* You can't set exactly 1px, browsers round it, so use 2-4px for visible thinness */
-  height: 4px; /* For horizontal scrollbars */
+  width: 1px; /* You can't set exactly 1px, browsers round it, so use 2-4px for visible thinness */
+  height: 2px;
+  border-radius: 12px;
+  
 }
 
 ::-webkit-scrollbar-thumb {
-  background: white; /* Purple shade */
+  background: #8b5cf6; /* Purple shade */
   border-radius: 9999px;
 }
 
@@ -16,8 +18,12 @@
 
 /* Firefox */
 * {
-  scrollbar-width: thin;
-  scrollbar-color: white transparent;
+  scrollbar-width: 2px;
+  scrollbar-color: transparent;
+  scroll-behavior: smooth;
+
+  -webkit-overflow-scrolling: touch;
+
 }
 
 @keyframes slide {

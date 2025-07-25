@@ -9,14 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/genai": "^1.10.0",
     "@headlessui/react": "^2.2.4",
     "@stripe/stripe-js": "^7.5.0",
+    "axios": "^1.11.0",
     "framer-motion": "^12.23.6",
     "howler": "^2.2.4",
     "lucide-react": "^0.525.0",
     "mongoose": "^8.16.4",
     "next": "15.3.5",
     "next-auth": "^4.24.11",
+    "rate-limiter-flexible": "^7.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",

@@ -25,13 +25,13 @@ export default function PaymentSuccess() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-100 to-green-50">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 to-white">
 
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        className="bg-green-500 rounded-full p-6 mb-6 shadow-lg"
+        className="bg-zinc-900 rounded-full p-6 mb-6 shadow-lg"
       >
         <svg
           className="w-16 h-16 text-white"
@@ -49,7 +49,7 @@ export default function PaymentSuccess() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="text-3xl font-bold text-green-800 mb-2"
+        className="text-3xl font-bold text-zinc-900 mb-2"
       >
         Payment Successful!
       </motion.h1>
@@ -60,7 +60,7 @@ export default function PaymentSuccess() {
         transition={{ delay: 0.5 }}
         className="text-gray-600 mb-6"
       >
-        Thank you for your payment ✨
+        Thank you for your payment. Enjoy the premium features!
       </motion.p>
 
       <motion.button
@@ -68,9 +68,9 @@ export default function PaymentSuccess() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
         onClick={handleGoHome}
-        className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg transition"
+        className="px-6 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-full shadow-lg transition"
       >
-        Go to Home →
+        Go to Home
       </motion.button>
     </div>
   );

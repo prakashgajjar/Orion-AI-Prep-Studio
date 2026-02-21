@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 ::-webkit-scrollbar {
-  width: 1px; /* You can't set exactly 1px, browsers round it, so use 2-4px for visible thinness */
+  width: 1px;
   height: 2px;
   border-radius: 12px;
   
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #8b5cf6; /* Purple shade */
+  background: #71717a;
   border-radius: 9999px;
 }
 
@@ -16,7 +16,6 @@
   background: transparent;
 }
 
-/* Firefox */
 * {
   scrollbar-width: 2px;
   scrollbar-color: transparent;

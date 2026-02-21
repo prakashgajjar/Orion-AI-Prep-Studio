@@ -24,7 +24,7 @@ export default function BuyButton({ text, amount , plan }) {
   return (
     <button
       onClick={handleCheckout}
-      className="w-full bg-indigo-50 text-indigo-600 py-3 rounded-full font-semibold hover:bg-indigo-100"
+      className="w-full bg-zinc-900 text-white py-3 rounded-full font-semibold hover:bg-zinc-800 transition"
     >
       {text}
     </button>

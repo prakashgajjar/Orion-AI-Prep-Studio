@@ -1,157 +1,221 @@
 "use client";
 
-import oneOneChatAction from "@/actions/ai-chat/one-one";
-import { AppContext } from "@/hooks/AppContext";
-import { useState, useRef, useContext, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
+import { Mic, MicOff, Volume2 } from "lucide-react";
 
-export default function STTConvertion() {
+export default function STTConvertion({ onUserSTT = () => {}, lastAiMessage = "" }) {
   const [isListening, setIsListening] = useState(false);
-  const {
-    userSTT,
-    setUserSTT,
-    setAiTextAnswer,
-    chatHistory,
-    stopSpeechRecognition,
-  } = useContext(AppContext);
-
+  const [liveTranscript, setLiveTranscript] = useState("");
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const recognitionRef = useRef(null);
-  const inactivityTimeoutRef = useRef(null);
-  const router = useRouter();
+  const utteranceRef = useRef(null);
 
-  // 👉 Speak helper: always finds girl voice properly
+  // Text-to-Speech Function
   const speak = (text) => {
+    // Cancel any existing speech
     window.speechSynthesis.cancel();
+    setIsSpeaking(true);
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-US";
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    utterance.volume = 1;
 
-    // 🩷 Find girl voice properly (voices may load async!)
+    // Set female voice if available
     const setVoice = () => {
       const voices = window.speechSynthesis.getVoices();
-      const girlVoice = voices.find(
+      const femaleVoice = voices.find(
         (v) =>
           v.lang.startsWith("en") &&
           (v.name.toLowerCase().includes("female") ||
-            v.name.toLowerCase().includes("google us english"))
+            v.name.toLowerCase().includes("woman") ||
+            v.name.toLowerCase().includes("samantha") ||
+            v.name.toLowerCase().includes("victoria") ||
+            v.name.toLowerCase().includes("moira"))
       );
-      if (girlVoice) utterance.voice = girlVoice;
+      
+      if (femaleVoice) {
+        utterance.voice = femaleVoice;
+      }
     };
 
-    if (window.speechSynthesis.getVoices().length) {
-      setVoice();
-    } else {
-      // voices might not be ready — wait for them
+    // Load voices if not already loaded
+    if (window.speechSynthesis.getVoices().length === 0) {
       window.speechSynthesis.onvoiceschanged = setVoice;
+    } else {
+      setVoice();
     }
 
-    utterance.onend = () => {
-      console.log("AI finished speaking ✅");
-      startListening();
+    // Handle speech events
+    utterance.onstart = () => {
+      console.log("🔊 AI speaking...");
+      setIsSpeaking(true);
     };
 
+    utterance.onend = () => {
+      console.log("✅ AI finished speaking");
+      setIsSpeaking(false);
+    };
+
+    utterance.onerror = (e) => {
+      console.error("❌ Speech error:", e);
+      setIsSpeaking(false);
+    };
+
+    utteranceRef.current = utterance;
     window.speechSynthesis.speak(utterance);
   };
 
-  // 👉 Call AI when user speaks
-  const aiChat = async () => {
-    try {
-      const response = await oneOneChatAction({ chatHistory });
-      if (response.error) {
-        console.error("AI Error:", response.error);
-        return;
-      }
-      console.log("AI Response:", response);
-      setAiTextAnswer(response);
-      speak(response);
-    } catch (error) {
-      console.error("AI Chat Error:", error);
-    }
-  };
-
-  // 🔥 Auto run AI when userSTT updates
+  // Auto-speak when AI message is received
   useEffect(() => {
-    if (userSTT) aiChat();
-  }, [userSTT]);
-
-  // Run AI for first system message if needed
-  useEffect(() => {
-    if (stopSpeechRecognition) {
-      recognitionRef.current?.stop();
+    if (lastAiMessage && lastAiMessage.trim()) {
+      // Small delay to ensure UI is updated
+      setTimeout(() => {
+        speak(lastAiMessage);
+      }, 300);
     }
-    aiChat();
-  }, []);
+  }, [lastAiMessage]);
 
+  // Start listening
   const startListening = () => {
+    // Don't start if AI is speaking
+    if (isSpeaking) {
+      console.log("⏸️ Waiting for AI to finish speaking...");
+      return;
+    }
+
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      alert("Your browser does not support Speech Recognition");
+      alert("Sorry, your browser doesn't support voice input. Please use Chrome, Edge, or Safari.");
       return;
     }
 
     const recognition = new SpeechRecognition();
     recognition.lang = "en-US";
-    recognition.interimResults = false;
+    recognition.interimResults = true;
     recognition.maxAlternatives = 1;
+    recognition.continuous = true;
 
     recognition.onstart = () => {
-      console.log("Mic started");
+      console.log("🎤 Listening started...");
       setIsListening(true);
-
-      // Clear inactivity nudge
-      if (inactivityTimeoutRef.current) {
-        clearTimeout(inactivityTimeoutRef.current);
-      }
+      setLiveTranscript("");
     };
 
     recognition.onresult = (event) => {
-      const speechToText = event.results[0][0].transcript;
-      console.log("User said:", speechToText);
-      setUserSTT(speechToText);
+      let finalText = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        finalText += event.results[i][0].transcript;
+      }
+      console.log("📝 You said:", finalText);
+      setLiveTranscript(finalText);
     };
 
     recognition.onend = () => {
-      console.log("Mic stopped");
-      setIsListening(false);
-
-      // If user stays silent for 12 sec, nudge them
-      // inactivityTimeoutRef.current = setTimeout(() => {
-      //   console.log("No answer, nudging...");
-      //   speak("Hey Prakash, are you there? Please answer the question.");
-      // }, 12000);
+      if (isListening) recognition.start(); // Auto restart if still ON
     };
 
     recognition.onerror = (event) => {
-      console.error("Speech Recognition Error:", event.error);
-      setIsListening(false);
+      console.error("❌ Speech Recognition Error:", event.error);
+      if (event.error === "no-speech" && isListening) {
+        recognition.start();
+      } else {
+        setIsListening(false);
+      }
     };
 
     recognition.start();
     recognitionRef.current = recognition;
   };
 
-  // Cleanup: stop mic & voice if you leave page or route
+  // Stop listening
+  const stopListening = () => {
+    setIsListening(false);
+    recognitionRef.current?.stop();
+
+    // Send transcript when mic stops
+    if (liveTranscript.trim()) {
+      console.log("📤 Sending to AI...");
+      onUserSTT(liveTranscript);
+      setLiveTranscript("");
+    }
+  };
+
+  // Cleanup on unmount
   useEffect(() => {
-    const stopAll = () => {
+    return () => {
       recognitionRef.current?.stop();
       window.speechSynthesis.cancel();
-      console.log("Mic & voice stopped (route change or unmount)");
+      console.log("🛑 Mic & voice stopped");
     };
-
-    // Next.js route change
-    router.events?.on?.("routeChangeStart", stopAll);
-
-    return () => {
-      stopAll();
-      router.events?.off?.("routeChangeStart", stopAll);
-    };
-  }, [router]);
+  }, []);
 
   return (
-    <div className="">
-     
+    <div className="relative w-full bg-gradient-to-t from-black/80 to-transparent px-6 py-6 flex flex-col items-center gap-4">
+      {/* Status Indicator */}
+      {(isListening || isSpeaking) && (
+        <div className={`w-full max-w-xl px-4 py-3 rounded-lg shadow-lg border flex items-center gap-2 ${
+          isSpeaking 
+            ? "bg-blue-50 border-blue-300 text-blue-900" 
+            : "bg-green-50 border-green-300 text-green-900"
+        }`}>
+          <span className={`animate-bounce text-lg ${isSpeaking ? "text-blue-600" : "text-green-600"}`}>
+            {isSpeaking ? "🔊" : "🎤"}
+          </span>
+          <span className="text-sm font-medium">
+            {isSpeaking ? "AI is speaking..." : "Listening..."}
+          </span>
+        </div>
+      )}
+
+      {/* Live Transcript Display */}
+      {isListening && liveTranscript && (
+        <div className="w-full max-w-xl bg-white/95 backdrop-blur-sm text-gray-900 px-4 py-3 rounded-lg shadow-lg border border-gray-200">
+          <p className="text-sm font-medium mb-1 text-gray-600">You're saying:</p>
+          <p className="text-base leading-relaxed">{liveTranscript}</p>
+        </div>
+      )}
+
+      {/* Main Mic Button */}
+      <button
+        onClick={isListening ? stopListening : startListening}
+        disabled={isSpeaking}
+        className={`relative px-8 py-4 rounded-full font-bold text-white shadow-lg transition-all transform hover:scale-105 flex items-center gap-3 ${
+          isListening 
+            ? "bg-red-500 hover:bg-red-600 animate-pulse" 
+            : isSpeaking
+            ? "bg-gray-500 cursor-not-allowed opacity-70"
+            : "bg-green-500 hover:bg-green-600"
+        }`}
+      >
+        {isListening ? (
+          <>
+            <MicOff size={22} />
+            <span>Stop Recording</span>
+          </>
+        ) : isSpeaking ? (
+          <>
+            <Volume2 size={22} className="animate-bounce" />
+            <span>AI Speaking...</span>
+          </>
+        ) : (
+          <>
+            <Mic size={22} />
+            <span>Start Speaking</span>
+          </>
+        )}
+      </button>
+
+      {/* Subtitle Info */}
+      {isListening && !liveTranscript && (
+        <p className="text-white/80 text-sm flex items-center gap-2">
+          <span className="animate-pulse">●</span>
+          <span>Listening for your response...</span>
+        </p>
+      )}
     </div>
   );
 }

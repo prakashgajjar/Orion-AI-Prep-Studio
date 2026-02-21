@@ -2,41 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useCallback } from "react";
-
-// --- Icons ---
-const CloseIcon = ({ className = "w-6 h-6" }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className={className}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M6 18L18 6M6 6l12 12"
-    />
-  </svg>
-);
-
-const ArrowRightIcon = ({ className = "w-5 h-5" }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={2}
-    stroke="currentColor"
-    className={className}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-    />
-  </svg>
-);
+import { X, ArrowRight, Loader } from "lucide-react";
 
 const GenerateInterviewModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -100,26 +66,26 @@ const GenerateInterviewModal = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-[6px] flex items-center justify-center"
+      className="fixed inset-0 z-50 bg-black/20 backdrop-blur-[6px] flex items-center justify-center"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-black text-white rounded-2xl w-full max-w-md mx-4 p-8 relative shadow-2xl border border-green-500/20"
+        className="bg-white text-zinc-900 rounded-2xl w-full max-w-md mx-4 p-8 relative shadow-lg border border-gray-200"
       >
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 text-gray-400 hover:text-green-400 transition"
+          className="absolute top-6 right-6 text-gray-500 hover:text-zinc-900 transition"
           aria-label="Close"
         >
-          <CloseIcon />
+          <X size={24} />
         </button>
 
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-green-400">Generate Interview</h2>
-          <p className="text-gray-400 mt-1">
+          <h2 className="text-2xl font-bold text-zinc-900">Generate Interview</h2>
+          <p className="text-gray-600 mt-1">
             Enter your details to generate your mock interview session.
           </p>
         </div>
@@ -127,7 +93,7 @@ const GenerateInterviewModal = ({ isOpen, onClose }) => {
         <form onSubmit={handleSubmit} className="space-y-5">
           {["name", "jobTitle", "email"].map((field) => (
             <div key={field}>
-              <label htmlFor={field} className="block text-sm mb-2 capitalize">
+              <label htmlFor={field} className="block text-sm mb-2 capitalize text-gray-700">
                 {field === "jobTitle" ? "Job title" : field}
               </label>
               <input
@@ -141,14 +107,14 @@ const GenerateInterviewModal = ({ isOpen, onClose }) => {
                     ? "e.g., Frontend Developer"
                     : "you@example.com"
                 }
-                className={`w-full bg-transparent border rounded-xl px-4 py-3 placeholder-gray-500 focus:outline-none focus:ring-2 transition ${
+                className={`w-full bg-white border rounded-xl px-4 py-3 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
                   errors[field]
-                    ? "border-red-500 focus:ring-red-500"
-                    : "border-gray-600 focus:ring-green-400"
+                    ? "border-red-500 focus:ring-red-400"
+                    : "border-gray-300 focus:ring-zinc-900"
                 }`}
               />
               {errors[field] && (
-                <p className="text-red-500 text-xs mt-1">{errors[field]}</p>
+                <p className="text-red-600 text-xs mt-1">{errors[field]}</p>
               )}
             </div>
           ))}
@@ -156,48 +122,29 @@ const GenerateInterviewModal = ({ isOpen, onClose }) => {
           <button
             type="submit"
             disabled={!isFormValid || isSubmitting}
-            className="w-full flex items-center justify-center gap-2 bg-green-400 text-black font-semibold py-3 px-6 rounded-xl transition hover:bg-green-500 disabled:bg-gray-500 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 bg-zinc-900 text-white font-semibold py-3 px-6 rounded-xl transition hover:bg-zinc-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (
               <>
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
+                <Loader size={20} className="animate-spin" />
                 <span>Generating...</span>
               </>
             ) : (
               <>
-                <ArrowRightIcon />
+                <ArrowRight size={20} />
                 <span>Generate Interview</span>
               </>
             )}
           </button>
         </form>
 
-        <p className="text-center text-xs text-gray-500 mt-8">
+        <p className="text-center text-xs text-gray-600 mt-8">
           By continuing, you agree to our{" "}
-          <a href="#" className="underline hover:text-green-400">
+          <a href="#" className="underline hover:text-zinc-900">
             Terms of Service
           </a>{" "}
           and{" "}
-          <a href="#" className="underline hover:text-green-400">
+          <a href="#" className="underline hover:text-zinc-900">
             Privacy Policy
           </a>
           .

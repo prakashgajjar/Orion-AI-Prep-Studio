@@ -3,7 +3,7 @@
 
 import { loadStripe } from "@stripe/stripe-js";
 
-export default function BuyButton({ text, amount , plan }) {
+export default function BuyButton({ text, amount, plan, isPremium }) {
   const handleCheckout = async () => {
     const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
     const res = await fetch("/api/payment/checkout", {
@@ -24,7 +24,11 @@ export default function BuyButton({ text, amount , plan }) {
   return (
     <button
       onClick={handleCheckout}
-      className="w-full bg-zinc-900 text-white py-3 rounded-full font-semibold hover:bg-zinc-800 transition"
+      className={`w-full py-3 rounded-full font-semibold transition cursor-pointer ${
+        isPremium
+          ? "bg-white text-zinc-900 hover:bg-gray-100"
+          : "bg-zinc-900 text-white hover:bg-zinc-800"
+      }`}
     >
       {text}
     </button>

@@ -39,7 +39,7 @@ const GenerateInterviewModal = ({ isOpen, onClose }) => {
         console.log("Submitted:", formData);
         setIsSubmitting(false);
         onClose();
-        router.push("/interview-single");
+        router.push(`/interview-single?jobTitle=${encodeURIComponent(formData.jobTitle)}`);
       }, 1500);
     }
   };

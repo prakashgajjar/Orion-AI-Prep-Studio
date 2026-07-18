@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 import User from "@/models/userSchema.models";
 import connectDB from "@/configs/db.config";
 
@@ -9,6 +10,33 @@ export const authOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
+    CredentialsProvider({
+      name: "Developer Account",
+      credentials: {
+        email: { label: "Email (Any email)", type: "email", placeholder: "dev@example.com" },
+        password: { label: "Password (Any password)", type: "password" }
+      },
+      async authorize(credentials) {
+        await connectDB();
+        const email = credentials?.email?.toLowerCase() || "developer@orion.ai";
+        
+        let user = await User.findOne({ email });
+        if (!user) {
+          user = await User.create({
+            name: credentials?.email ? credentials.email.split("@")[0] : "Developer",
+            email: email,
+            image: "https://placehold.co/100",
+            isVerified: true
+          });
+        }
+        return {
+          id: user._id.toString(),
+          name: user.name,
+          email: user.email,
+          image: user.image
+        };
+      }
+    })
   ],
 
   callbacks: {

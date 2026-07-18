@@ -29,7 +29,7 @@ export default function UploadPDFModal({ isOpen, onClose }) {
       return;
     }
     setIsProcessing(true);
-    router.push("/interview-single");
+    router.push(`/interview-single?jobTitle=${encodeURIComponent("PDF Q&A: " + pdfFile.name)}`);
   };
 
 

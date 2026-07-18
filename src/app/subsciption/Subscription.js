@@ -120,6 +120,7 @@ export default function Subscription() {
             text="Choose and Get 38% OFF"
             amount={getPrice("pro") * 100}
             plan="pro"
+            isPremium={true}
           />
         </div>
 

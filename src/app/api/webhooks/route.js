@@ -1,52 +1,55 @@
 import Stripe from "stripe";
-import { buffer } from "micro";
 import connectDB from "@/configs/db.config";
 import User from "@/models/userSchema.models";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export default async function handler(req, res) {
-  if (req.method === "POST") {
-    const sig = req.headers["stripe-signature"];
-    const buf = await buffer(req);
+export async function POST(req) {
+  const sig = req.headers.get("stripe-signature");
+  let body;
+  try {
+    body = await req.text();
+  } catch (err) {
+    return new Response(JSON.stringify({ error: "Failed to read request body" }), { status: 400 });
+  }
 
-    let event;
-    try {
-      event = stripe.webhooks.constructEvent(
-        buf,
-        sig,
-        process.env.STRIPE_WEBHOOK_SECRET
-      );
-    } catch (err) {
-      console.error("Webhook Error:", err.message);
-      return res.status(400).send(`Webhook Error: ${err.message}`);
-    }
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(
+      body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    console.error("Webhook Error:", err.message);
+    return new Response(`Webhook Error: ${err.message}`, { status: 400 });
+  }
 
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object;
-      console.log(session)
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object;
+    console.log("Stripe Checkout Completed:", session);
 
-      await connectDB();
+    await connectDB();
 
-      // Find your user by email
-      const user = await User.findOne({ email: session.customer_email });
-
+    // Find your user by email from customer details or fallback session email
+    const email = session.customer_details?.email || session.customer_email;
+    if (email) {
+      const user = await User.findOne({ email });
       if (user) {
-        user.subscription.plan = "pro";
+        user.subscription = user.subscription || {};
+        user.subscription.plan = session.metadata?.plan || "pro";
         user.subscription.status = "active";
         await user.save();
+        console.log(`User ${email} subscription updated successfully.`);
+      } else {
+        console.warn(`User with email ${email} not found.`);
       }
     }
-
-    res.status(200).json({ received: true });
-  } else {
-    res.setHeader("Allow", "POST");
-    res.status(405).end("Method Not Allowed");
   }
+
+  return new Response(JSON.stringify({ received: true }), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
 }
+

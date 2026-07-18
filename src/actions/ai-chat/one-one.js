@@ -2,7 +2,7 @@ import axios from "axios"
 
 export default async function oneOneChatAction(message) {
     try {
-        const response = await axios.post('api/ai-interview/one-one', message, {
+        const response = await axios.post('/api/ai-interview/one-one', message, {
             headers: {
                 'Content-Type': 'application/json',
             },

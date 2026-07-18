@@ -5,6 +5,7 @@ import VideoPanel from "./VideoPanel.js";
 import ChatPanel from "./ChatPanel.js";
 import { useRouter } from "next/navigation.js";
 import STTConvertion from "./STTConvertion.js";
+import oneOneChatAction from "@/actions/ai-chat/one-one.js";
 
 export default function InterviewPage() {
   const router = useRouter();
@@ -17,19 +18,10 @@ export default function InterviewPage() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isInterviewStarted, setIsInterviewStarted] = useState(false);
   const [interviewEnded, setInterviewEnded] = useState(false);
+  const [jobTitle, setJobTitle] = useState("Software Developer");
 
   const videoRef = useRef(null);
   const mediaStreamRef = useRef(null);
-
-  // Initial AI greeting and follow-up questions
-  const initialGreeting = "Hello! Welcome to your interview. Let's start with a simple question: Can you tell me about your background and experience?";
-  const followUpQuestions = [
-    "What are your key strengths and how do they relate to this position?",
-    "Can you describe a challenging project you've worked on and how you overcame the obstacles?",
-    "Where do you see yourself in 5 years, and how does this role fit into your career goals?",
-    "Why are you interested in this particular company and position?",
-    "Do you have any questions for me about the role or company?"
-  ];
   const followUpIndex = useRef(0);
 
   // Initialize camera and microphone
@@ -42,10 +34,25 @@ export default function InterviewPage() {
         mediaStreamRef.current = stream;
         setIsInterviewStarted(true);
         
+        // Read job title from URL immediately to greet correctly
+        let title = "Software Developer";
+        if (typeof window !== "undefined") {
+          const searchParams = new URLSearchParams(window.location.search);
+          const t = searchParams.get("jobTitle");
+          if (t) {
+            title = t;
+            setJobTitle(t);
+          }
+        }
+
         // Add initial AI greeting after a short delay
         await new Promise((r) => setTimeout(r, 800));
         setMessages([
-          { sender: "ai", text: initialGreeting, timestamp: new Date() }
+          {
+            sender: "ai",
+            text: `Hello! Welcome to your mock interview for the ${title} role. Let's start with a simple question: Can you tell me about your background and experience?`,
+            timestamp: new Date()
+          }
         ]);
         setIsInputDisabled(false);
       } catch (error) {
@@ -73,28 +80,87 @@ export default function InterviewPage() {
   // Handle input change
   const handleInputChange = (e) => setInputValue(e.target.value);
 
-  // Handle form submission
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    if (!inputValue.trim() || isInputDisabled) return;
-    
-    // Add user message
-    setMessages((prev) => [...prev, { sender: "user", text: inputValue, timestamp: new Date() }]);
+  // Unified submission logic (for text and voice inputs)
+  const submitAnswer = async (text) => {
+    if (!text.trim() || isInputDisabled) return;
+
+    const userMsg = { sender: "user", text, timestamp: new Date() };
+    const updatedMessages = [...messages, userMsg];
+
+    setMessages(updatedMessages);
     setInputValue("");
     setIsInputDisabled(true);
 
-    // Simulate AI response with follow-up question
-    setTimeout(() => {
-      if (followUpIndex.current < followUpQuestions.length) {
-        const nextQuestion = followUpQuestions[followUpIndex.current++];
-        setMessages((prev) => [...prev, { sender: "ai", text: nextQuestion, timestamp: new Date() }]);
-        setIsInputDisabled(false);
+    try {
+      // Format chat history for backend/Gemini
+      const history = updatedMessages.map(msg => ({
+        sender: msg.sender,
+        text: msg.text
+      }));
+
+      // Call dynamic Gemini AI
+      const aiResponse = await oneOneChatAction({
+        chatHistory: history,
+        jobTitle: jobTitle
+      });
+
+      if (aiResponse) {
+        setMessages((prev) => [
+          ...prev,
+          { sender: "ai", text: aiResponse, timestamp: new Date() }
+        ]);
+
+        // Check if the conversation has concluded
+        if (
+          aiResponse.toLowerCase().includes("concludes our interview") ||
+          aiResponse.toLowerCase().includes("conclude our interview") ||
+          aiResponse.toLowerCase().includes("thank you for your time") ||
+          followUpIndex.current >= 5
+        ) {
+          setInterviewEnded(true);
+        } else {
+          followUpIndex.current += 1;
+          setIsInputDisabled(false);
+        }
       } else {
-        const finalMessage = "Thank you for your time and thoughtful responses! That concludes our interview. We'll review your answers and get back to you soon.";
-        setMessages((prev) => [...prev, { sender: "ai", text: finalMessage, timestamp: new Date() }]);
-        setInterviewEnded(true);
+        throw new Error("Invalid response from AI");
       }
-    }, 1000);
+    } catch (err) {
+      console.error("Gemini AI failed, falling back to static questions:", err);
+
+      // Fallback questions array
+      const fallbackQuestions = [
+        "What are your key strengths and how do they relate to this position?",
+        "Can you describe a challenging project you've worked on and how you overcame the obstacles?",
+        "Where do you see yourself in 5 years, and how does this role fit into your career goals?",
+        "Why are you interested in this particular company and position?",
+        "Do you have any questions for me about the role or company?"
+      ];
+
+      setTimeout(() => {
+        if (followUpIndex.current < fallbackQuestions.length) {
+          const nextQuestion = fallbackQuestions[followUpIndex.current++];
+          setMessages((prev) => [
+            ...prev,
+            { sender: "ai", text: nextQuestion, timestamp: new Date() }
+          ]);
+          setIsInputDisabled(false);
+        } else {
+          const finalMessage = "Thank you for your time and thoughtful responses! That concludes our interview. We'll review your answers and get back to you soon.";
+          setMessages((prev) => [
+            ...prev,
+            { sender: "ai", text: finalMessage, timestamp: new Date() }
+          ]);
+          setInterviewEnded(true);
+        }
+      }, 1000);
+    }
+  };
+
+  // Handle form submission
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    submitAnswer(inputValue);
   };
 
   // Toggle camera
@@ -113,7 +179,6 @@ export default function InterviewPage() {
       mediaStreamRef.current.getTracks().forEach((track) => track.stop());
     }
     window.speechSynthesis.cancel();
-    // TODO: Save interview summary before navigation
     setTimeout(() => {
       router.push("/");
     }, 500);
@@ -138,9 +203,7 @@ export default function InterviewPage() {
           />
           <STTConvertion 
             onUserSTT={(text) => {
-              if (text.trim() && !isInputDisabled) {
-                setMessages((prev) => [...prev, { sender: "user", text, timestamp: new Date() }]);
-              }
+              submitAnswer(text);
             }}
             lastAiMessage={messages.length > 0 && messages[messages.length - 1].sender === "ai" ? messages[messages.length - 1].text : ""}
           />

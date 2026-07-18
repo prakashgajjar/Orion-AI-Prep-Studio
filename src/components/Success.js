@@ -22,7 +22,7 @@ export default function PaymentSuccess() {
     }, 4000); // 10 sec fallback auto redirect
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [router]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 to-white">

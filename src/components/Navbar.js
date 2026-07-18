@@ -130,7 +130,7 @@ const Navbar = () => {
             </div>
           ) : (
             <button
-              onClick={() => signIn("google", { callbackUrl: "/" })}
+              onClick={() => signIn(undefined, { callbackUrl: "/" })}
               className="bg-zinc-900 hover:bg-zinc-800 text-white px-4 py-2 rounded-md text-sm font-semibold transition"
             >
               Log in
@@ -213,7 +213,7 @@ const Navbar = () => {
                 </div>
               ) : (
                 <button
-                  onClick={() => signIn("google", { callbackUrl: "/" })}
+                  onClick={() => signIn(undefined, { callbackUrl: "/" })}
                   className="bg-zinc-900 hover:bg-zinc-800 text-white px-4 py-2 rounded-md text-sm font-semibold transition"
                 >
                   Log in

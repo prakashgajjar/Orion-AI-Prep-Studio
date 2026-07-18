@@ -62,7 +62,7 @@ const Navbar = () => {
                   }}>
 
                     <Link
-                      href="#"
+                      href={item === "AI Test Generator" ? "/test" : "#"}
                       className="block px-5 py-3 hover:bg-gray-100 hover:text-zinc-900 transition"
                     >
                       {item}
@@ -171,7 +171,7 @@ const Navbar = () => {
                   ].map((item, idx) => (
                     <li key={idx}>
                       <Link
-                        href="#"
+                        href={item === "AI Test Generator" ? "/test" : "#"}
                         className="block px-4 py-2 text-sm hover:bg-gray-100 hover:text-zinc-900 rounded-md transition"
                       >
                         {item}

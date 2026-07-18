@@ -15,13 +15,20 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
     },
+
+    password: {
+      type: String,
+      // Not required — future-proof for OAuth later
+      select: false, // Never return password in queries by default
+    },
+
     image: {
       type: String, // profile picture URL
     },
 
     authProvider: {
       type: String,
-      enum: ["credentials", "google", "github"],
+      enum: ["credentials"],
       default: "credentials",
     },
 

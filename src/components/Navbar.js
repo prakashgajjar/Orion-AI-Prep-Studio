@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import Link from "next/link";
 import { FiMenu, FiX } from "react-icons/fi";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import { AppContext } from "@/hooks/AppContext";
 import { ChevronDown } from "lucide-react";
@@ -110,31 +110,39 @@ const Navbar = () => {
         </ul>
 
         {/* Right: Auth Buttons (Desktop) */}
-        <div className="hidden md:flex items-center space-x-4">
+        <div className="hidden md:flex items-center space-x-3">
           {session ? (
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               <Image
-                src={session.user.image}
-                alt={session.user.name}
-                className="w-8 h-8 rounded-full"
+                src={session.user.image || "https://ui-avatars.com/api/?name=U&background=6366f1&color=fff&size=100"}
+                alt={session.user.name || "User"}
+                className="w-8 h-8 rounded-full object-cover"
                 width={32}
                 height={32}
               />
-              <span className="text-sm text-gray-700">{session.user.name}</span>
+              <span className="text-sm text-gray-700 font-medium">{session.user.name}</span>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
-                className="bg-gray-300 hover:bg-gray-400 text-zinc-900 px-4 py-2 rounded-md text-sm font-semibold transition"
+                className="bg-gray-200 hover:bg-gray-300 text-zinc-900 px-4 py-2 rounded-md text-sm font-semibold transition"
               >
                 Log out
               </button>
             </div>
           ) : (
-            <button
-              onClick={() => signIn(undefined, { callbackUrl: "/" })}
-              className="bg-zinc-900 hover:bg-zinc-800 text-white px-4 py-2 rounded-md text-sm font-semibold transition"
-            >
-              Log in
-            </button>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/login"
+                className="text-zinc-700 hover:text-zinc-900 px-4 py-2 rounded-md text-sm font-semibold transition"
+              >
+                Log in
+              </Link>
+              <Link
+                href="/signup"
+                className="bg-zinc-900 hover:bg-zinc-800 text-white px-4 py-2 rounded-md text-sm font-semibold transition"
+              >
+                Sign up
+              </Link>
+            </div>
           )}
         </div>
 
@@ -195,15 +203,15 @@ const Navbar = () => {
             </li>
             <div className="pt-4">
               {session ? (
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-3">
                   <Image
-                    src={session.user.image}
-                    alt={session.user.name}
-                    className="w-8 h-8 rounded-full"
+                    src={session.user.image || "https://ui-avatars.com/api/?name=U&background=6366f1&color=fff&size=100"}
+                    alt={session.user.name || "User"}
+                    className="w-8 h-8 rounded-full object-cover"
                     width={32}
                     height={32}
                   />
-                  <span className="text-sm text-gray-700">{session.user.name}</span>
+                  <span className="text-sm text-gray-700 font-medium">{session.user.name}</span>
                   <button
                     onClick={() => signOut({ callbackUrl: "/" })}
                     className="bg-gray-300 hover:bg-gray-400 text-zinc-900 px-4 py-2 rounded-md text-sm font-semibold transition"
@@ -212,12 +220,22 @@ const Navbar = () => {
                   </button>
                 </div>
               ) : (
-                <button
-                  onClick={() => signIn(undefined, { callbackUrl: "/" })}
-                  className="bg-zinc-900 hover:bg-zinc-800 text-white px-4 py-2 rounded-md text-sm font-semibold transition"
-                >
-                  Log in
-                </button>
+                <div className="flex flex-col gap-2">
+                  <Link
+                    href="/login"
+                    className="block bg-zinc-900 hover:bg-zinc-800 text-white px-4 py-2 rounded-md text-sm font-semibold text-center transition"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="block border border-zinc-400 hover:border-zinc-700 text-zinc-700 hover:text-zinc-900 px-4 py-2 rounded-md text-sm font-semibold text-center transition"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Sign up
+                  </Link>
+                </div>
               )}
             </div>
           </ul>

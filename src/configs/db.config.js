@@ -1,19 +1,33 @@
 import mongoose from "mongoose";
 
+let isConnected = false;
+
 const connectDB = async () => {
-  try {
-    if (mongoose.connection.readyState >= 1) {
-      console.log("Already connected to MongoDB");
-      return;
-    }
-  } catch (error) {
-    console.error("Error checking MongoDB connection:", error);
+  // Already fully connected
+  if (isConnected && mongoose.connection.readyState === 1) {
+    return;
   }
+
+  // If in a broken/disconnecting state, reset
+  if (mongoose.connection.readyState === 2 || mongoose.connection.readyState === 3) {
+    try { await mongoose.disconnect(); } catch {}
+  }
+
   try {
-    await mongoose.connect(`${process.env.MONGODB_URI}`);
-    console.log("Connected to MongoDB");
+    const uri = process.env.MONGODB_URI;
+    if (!uri) throw new Error("MONGODB_URI is not set in environment variables.");
+
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 5000,
+    });
+
+    isConnected = true;
+    console.log("✅ Connected to MongoDB:", uri.split("@").pop() || uri);
   } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
+    isConnected = false;
+    console.error("❌ Error connecting to MongoDB:", error.message);
+    throw error; // Let callers handle the failure
   }
 };
 

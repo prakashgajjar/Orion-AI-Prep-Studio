@@ -11,7 +11,8 @@ const nextConfig = {
             "unsplash.com",
             "plus.unsplash.com",
             "lh3.googleusercontent.com",
-            "placehold.co"
+            "placehold.co",
+            "ui-avatars.com"
 
         ]
     }

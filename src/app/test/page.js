@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import { 
   Sparkles, 
   BookOpen, 
@@ -27,6 +28,7 @@ const popularTopics = [
 ];
 
 export default function TestPage() {
+  const { data: session } = useSession();
   // States: 'setup' | 'loading' | 'quiz' | 'summary'
   const [gameState, setGameState] = useState("setup");
   const [selectedTopic, setSelectedTopic] = useState("");
@@ -112,8 +114,21 @@ export default function TestPage() {
     }
   };
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
     setGameState("summary");
+    if (session?.user) {
+      const results = getResultsSummary();
+      const amount = 50 + (results.correct * 5);
+      try {
+        await axios.post("/api/user/coins", {
+          amount,
+          reason: `AI Test: ${selectedTopic || customTopic}`,
+          source: "AI Test"
+        });
+      } catch (err) {
+        console.error("Failed to award coins:", err);
+      }
+    }
   };
 
   const handleReset = () => {

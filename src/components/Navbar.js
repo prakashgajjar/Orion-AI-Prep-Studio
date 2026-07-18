@@ -5,7 +5,8 @@ import { FiMenu, FiX } from "react-icons/fi";
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import { AppContext } from "@/hooks/AppContext";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Coins } from "lucide-react";
+import axios from "axios";
 
 const Navbar = () => {
   const [showAI, setShowAI] = useState(false);
@@ -14,8 +15,17 @@ const Navbar = () => {
   const aiRef = useRef(null);
   const resourcesRef = useRef(null);
   const { data: session } = useSession();
+  const [coins, setCoins] = useState(null);
 
   const {setShowPdfIntervewPopup} = useContext(AppContext);
+
+  useEffect(() => {
+    if (session?.user) {
+      axios.get("/api/user/coins")
+        .then((res) => setCoins(res.data.coins))
+        .catch((err) => console.error("Error fetching coins:", err));
+    }
+  }, [session]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -103,8 +113,8 @@ const Navbar = () => {
           </li>
 
           <li>
-            <Link href="#" className="hover:text-zinc-900 transition">
-              Coin System
+            <Link href="/rewards" className="hover:text-zinc-900 transition">
+              Rewards
             </Link>
           </li>
         </ul>
@@ -113,6 +123,12 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-3">
           {session ? (
             <div className="flex items-center space-x-3">
+              {coins !== null && (
+                <Link href="/rewards" className="flex items-center gap-1 bg-yellow-100 text-yellow-700 px-3 py-1.5 rounded-full text-sm font-bold shadow-sm hover:bg-yellow-200 transition">
+                  <Coins className="w-4 h-4" />
+                  {coins.toLocaleString()}
+                </Link>
+              )}
               <Image
                 src={session.user.image || "https://ui-avatars.com/api/?name=U&background=6366f1&color=fff&size=100"}
                 alt={session.user.name || "User"}

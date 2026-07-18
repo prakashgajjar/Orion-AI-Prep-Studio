@@ -7,9 +7,12 @@ import { useRouter } from "next/navigation.js";
 import STTConvertion from "./STTConvertion.js";
 import oneOneChatAction from "@/actions/ai-chat/one-one.js";
 import { Mic, Video, Loader } from "lucide-react";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 export default function InterviewPage() {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -25,6 +28,17 @@ export default function InterviewPage() {
   const videoRef = useRef(null);
   const mediaStreamRef = useRef(null);
   const followUpIndex = useRef(0);
+
+  // Award coins when interview ends
+  useEffect(() => {
+    if (interviewEnded && session?.user) {
+      axios.post("/api/user/coins", {
+        amount: 100,
+        reason: `Interview Completed: ${jobTitle}`,
+        source: "AI Interview"
+      }).catch(err => console.error("Failed to award interview coins", err));
+    }
+  }, [interviewEnded, session, jobTitle]);
 
   // Read job title from URL on mount
   useEffect(() => {
